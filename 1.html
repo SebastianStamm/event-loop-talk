@@ -59,6 +59,11 @@
     cursor: pointer;
   }
 
+  .addMicro,.addAnimation,#microtaskqueue,#animationqueue,#timesincerenderlabel,#renderTimeout {
+    display: none;
+  }
+
+
 </style>
 
 <div style="top: 10px; left: 41vw; right: 10px; height: 70px;" id="triggers">
@@ -73,13 +78,9 @@
   <h3>Available API</h3>
   <ul style="float: left;">
     <li>taskQueue</li>
-    <li>microTaskQueue</li>
-    <li>animationQueue</li>
   </ul>
   <ul style="float: right;">
     <li>execute(task)</li>
-    <li>shouldRepaint()</li>
-    <li>repaint()</li>
   </ul>
 </div>
 
@@ -97,7 +98,8 @@
   <div class="taskContainer">
   </div>
 </div>
-<div style="right: 10px; left: 89vw; top: 100px; font-size: 1.5em; text-align: center; border: 0;">Time since last
+<div id="timesincerenderlabel" style="right: 10px; left: 89vw; top: 100px; font-size: 1.5em; text-align: center; border: 0;">Time
+  since last
   render</div>
 
 <div id="renderTimeout" style="right: 10px; left: 89vw; top: 200px; font-size: 5em; text-align: center; border: 0;">0</div>
@@ -107,27 +109,6 @@
 
 <script>
   const mirror = CodeMirror(document.getElementById('editor'), {
-    value: `while (true) {
-  const task = taskQueue.pop();
-  await execute(task);
-
-  while (microTaskQueue.length) {
-    const task = microTaskQueue.pop();
-    await execute(task);
-  }
-
-  if (shouldRepaint()) {
-    const animationTasks = animationQueue.slice();
-
-    while (animationTasks.length) {
-      const task = animationTasks.pop();
-      await execute(task);
-    }
-
-    await repaint();
-  }
-}
-`,
     lineNumbers: true,
     autoCloseBrackets: true
   });
